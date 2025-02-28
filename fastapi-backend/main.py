@@ -30,8 +30,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://resume-rise.onrender.com"  # We'll update this later
-    ],  # Frontend URL
+        "https://resume-rise.onrender.com",
+        "https://resume-rise.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

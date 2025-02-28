@@ -6,6 +6,8 @@ const nextConfig = {
     images: {
         unoptimized: true
     },
+    trailingSlash: true,
+    basePath: '',
     async headers() {
       return [
         {
