@@ -34,8 +34,10 @@ app.add_middleware(
         "https://resume-rise.app"
     ],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=600,
 )
 
 # Add this after your imports but before the middleware
