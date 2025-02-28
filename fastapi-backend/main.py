@@ -19,6 +19,12 @@ load_dotenv()
 
 app = FastAPI()
 
+@app.options("/upload_resume")
+async def options_upload_resume():
+    return {
+        "Allow": "POST, OPTIONS"
+    }
+
 # Get OpenAI API key from environment variable for security
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
@@ -313,6 +319,9 @@ Resume Text:
             status_code=500,
             detail="An unexpected error occurred while processing your resume."
         )
+@app.get("/test")
+async def test():
+    return {"message": "API is working"}
 
 @app.post("/generate_improved_resume")
 async def generate_improved_resume(request: ImprovedResumeRequest):

@@ -530,9 +530,6 @@ export default function Home() {
       const response = await fetch(`${API_URL}/upload_resume`, {
         method: 'POST',
         body: formData,
-        headers: {
-          'Accept': 'application/json',
-        },
       });
 
       if (!response.ok) {
