@@ -33,6 +33,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import { API_URL } from '../config';
 
 type RealExampleCategory = {
   category: string;
@@ -524,7 +525,7 @@ export default function Home() {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/upload_resume', {
+      const response = await fetch(`${API_URL}/upload_resume`, {
         method: 'POST',
         body: formData,
       });

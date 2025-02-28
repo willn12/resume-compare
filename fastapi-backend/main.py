@@ -38,6 +38,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Add this after your imports but before the middleware
+@app.get("/")
+async def root():
+    return {"message": "Resume Analysis API is running"}
+
 class ResumeRequest(BaseModel):
     company: str
     job_title: str
