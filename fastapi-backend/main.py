@@ -28,7 +28,10 @@ openai.api_key = OPENAI_API_KEY
 # Add this after creating the FastAPI app
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_origins=[
+        "http://localhost:3000",
+        "https://your-frontend-name.onrender.com"  # We'll update this later
+    ],  # Frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
