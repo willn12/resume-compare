@@ -154,7 +154,7 @@ Sections to Analyze (with Weighting):
 
 For each section, provide approximately 20 real resume bullets from successful candidates, organized by relevant categories. These bullets should demonstrate best practices and have proven success in landing interviews at top tech companies. these are included in  the real_resume_bullets section.
 
-Return the response in this JSON format:
+Return the response in this JSON format, but for the real_resume_bullets section, include 10 bullets for each category:
 {{
     "technical_skills": "<score>",
     "soft_skills": "<score>",
@@ -178,19 +178,15 @@ Return the response in this JSON format:
                 {{
                     "category": "System Design & Architecture",
                     "bullets": [
-                    //10 bullets here
                         "Architected and implemented a microservices-based payment processing system handling 2M+ daily transactions using Java Spring Boot and Kafka, reducing latency by 40%",
                         "Designed and deployed distributed caching solution using Redis cluster, improving API response times by 65% and reducing database load by 40%"
-                        //10 bullets here
                     ]
                 }},
                 {{
                     "category": "Cloud & Infrastructure",
                     "bullets": [
-                    //10 bullets here
                         "Led migration of 200+ services to AWS, implementing Infrastructure as Code using Terraform and reducing deployment time by 65%",
                         "Architected and implemented auto-scaling Kubernetes clusters on AWS EKS, reducing infrastructure costs by 45% while improving availability to 99.99%"
-                        //10 bullets here
                     ]
                 }}
             ]
@@ -206,7 +202,6 @@ Return the response in this JSON format:
                     "bullets": [
                         "Led cross-functional team of 12 engineers, delivering a mission-critical payment platform that increased transaction volume by 300%",
                         "Mentored 5 junior developers through structured training program, with all achieving promotion within 18 months"
-                        //10 bullets here
                     ]
                 }}
             ]
@@ -222,7 +217,6 @@ Return the response in this JSON format:
                     "bullets": [
                         "Technical Skills: Python (Django, Flask), Java (Spring), AWS (ECS, Lambda), Kubernetes, Docker, CI/CD",
                         "Achievements highlighted with metrics: Reduced cloud costs by 40%, Improved API performance by 65%"
-                        //10 bullets here
                     ]
                 }}
             ]
@@ -238,7 +232,6 @@ Return the response in this JSON format:
                     "bullets": [
                         "Optimized database queries reducing average response time from 2s to 200ms, improving user satisfaction by 45%",
                         "Implemented caching strategy that reduced server load by 60% while handling 2x increase in daily active users"
-                        //10 bullets here
                     ]
                 }}
             ]
@@ -254,7 +247,6 @@ Return the response in this JSON format:
                     "bullets": [
                         "Pioneered adoption of microservices architecture, becoming internal champion and reducing deployment conflicts by 90%",
                         "Initiated and led company-wide migration to TypeScript, reducing production bugs by 45% in 6 months"
-                        //10 bullets here
                     ]
                 }}
             ]
