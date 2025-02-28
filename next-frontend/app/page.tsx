@@ -17,20 +17,34 @@ import {
   Grid,
   Dialog,
   Backdrop,
-  Fade
+  Fade,
+  Collapse,
+  Chip,
+  IconButton
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import WorkIcon from '@mui/icons-material/Work';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
-import { IconButton } from '@mui/material';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+
+type RealExampleCategory = {
+  category: string;
+  bullets: string[];
+};
 
 type SectionFeedback = {
   key_issues: string;
   improvements: string[];
   examples: string[];
   best_practices: string;
+  real_resume_bullets?: RealExampleCategory[];
 };
 
 type ScoreData = {
@@ -64,8 +78,134 @@ const TOP_COMPANIES: Company[] = [
   { name: 'Tesla', domain: 'tesla.com' },
   { name: 'NVIDIA', domain: 'nvidia.com' },
   { name: 'Salesforce', domain: 'salesforce.com' },
-  { name: 'Rocket Lab', domain: 'adobe.com' },
+  { name: 'Adobe', domain: 'adobe.com' },
 ];
+
+const MODERN_COLORS = {
+  primary: {
+    main: '#0062F4', // Modern blue
+    light: '#4B96FF',
+    dark: '#0045AC',
+  },
+  secondary: {
+    main: '#00C6BE', // Teal accent
+    light: '#33F4ED',
+    dark: '#00938D',
+  },
+  background: {
+    gradient: 'linear-gradient(180deg, rgba(0, 98, 244, 0.03) 0%, rgba(255,255,255,0) 100%)',
+    paper: '#FFFFFF',
+  },
+  text: {
+    primary: '#1A1A1A',
+    secondary: '#666666',
+  }
+};
+
+const RealExampleSection = ({ 
+  examples,
+  category 
+}: { 
+  examples: RealExampleCategory[];
+  category: string;
+}) => {
+  const [expanded, setExpanded] = useState(false);
+
+  const totalExamples = examples?.reduce((acc, cat) => 
+    acc + (Array.isArray(cat.bullets) ? cat.bullets.length : 0), 
+    0
+  ) || 0;
+
+  return (
+    <Box sx={{ mt: 4 }}>
+      <Button
+        onClick={() => setExpanded(!expanded)}
+        endIcon={
+          <ExpandMoreIcon 
+            sx={{ 
+              transform: expanded ? 'rotate(180deg)' : 'rotate(0)',
+              transition: 'transform 0.3s',
+            }} 
+          />
+        }
+        sx={{
+          width: '100%',
+          justifyContent: 'space-between',
+          p: 2,
+          backgroundColor: 'rgba(0, 98, 244, 0.04)',
+          borderRadius: 2,
+          '&:hover': {
+            backgroundColor: 'rgba(0, 98, 244, 0.08)',
+          },
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <AutoAwesomeIcon sx={{ color: MODERN_COLORS.primary.main }} />
+          <Typography 
+            variant="subtitle1" 
+            sx={{ 
+              fontWeight: 600,
+              color: MODERN_COLORS.text.primary,
+            }}
+          >
+            Successful {category} Examples from Top Resumes
+          </Typography>
+          <Chip 
+            label={`${totalExamples} examples`}
+            size="small"
+            sx={{ 
+              backgroundColor: 'rgba(0, 98, 244, 0.1)',
+              color: MODERN_COLORS.primary.main,
+            }}
+          />
+        </Box>
+      </Button>
+
+      <Collapse in={expanded}>
+        <Box sx={{ mt: 2 }}>
+          {examples.map((category, idx) => (
+            <Box key={idx} sx={{ mb: 3 }}>
+              <Typography 
+                variant="subtitle2" 
+                sx={{ 
+                  fontWeight: 600,
+                  color: MODERN_COLORS.primary.main,
+                  mb: 2,
+                }}
+              >
+                {category.category}
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {category.bullets.map((bullet, bulletIdx) => (
+                  <Paper
+                    key={bulletIdx}
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      backgroundColor: 'rgba(0, 98, 244, 0.02)',
+                      borderRadius: 2,
+                      borderLeft: '3px solid',
+                      borderColor: 'rgba(0, 98, 244, 0.2)',
+                      transition: 'all 0.2s ease',
+                      '&:hover': {
+                        backgroundColor: 'rgba(0, 98, 244, 0.04)',
+                        borderColor: MODERN_COLORS.primary.main,
+                      },
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                      {bullet}
+                    </Typography>
+                  </Paper>
+                ))}
+              </Box>
+            </Box>
+          ))}
+        </Box>
+      </Collapse>
+    </Box>
+  );
+};
 
 const StepCard = ({ 
   step, 
@@ -81,72 +221,194 @@ const StepCard = ({
   <Paper 
     elevation={isActive ? 3 : 1} 
     sx={{ 
-      p: 3,
+      p: 4,
       borderRadius: 2,
       opacity: isActive ? 1 : 0.7,
       transform: isActive ? 'scale(1)' : 'scale(0.98)',
-      transition: 'all 0.2s ease',
+      transition: 'all 0.3s ease',
       border: isActive ? '2px solid' : '1px solid',
-      borderColor: isActive ? 'primary.main' : 'grey.300',
+      borderColor: isActive ? MODERN_COLORS.primary.main : 'grey.300',
+      position: 'relative',
+      overflow: 'hidden',
     }}
   >
-    <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+    {/* Header Section */}
+    <Box sx={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      mb: 4,
+      pb: 3,
+      borderBottom: '1px solid',
+      borderColor: 'grey.100'
+    }}>
       <Box 
         sx={{ 
-          width: 32,
-          height: 32,
-          borderRadius: '50%',
-          bgcolor: isActive ? 'primary.main' : 'grey.300',
+          width: 40,
+          height: 40,
+          borderRadius: '12px',
+          background: `linear-gradient(135deg, ${MODERN_COLORS.primary.main}, ${MODERN_COLORS.primary.light})`,
           color: 'white',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           mr: 2,
-          fontWeight: 600,
+          fontWeight: 700,
+          fontSize: '1.2rem',
         }}
       >
         {step}
       </Box>
-      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+      <Typography variant="h5" sx={{ 
+        fontWeight: 700,
+        background: `linear-gradient(45deg, ${MODERN_COLORS.primary.main}, ${MODERN_COLORS.primary.light})`,
+        backgroundClip: 'text',
+        textFillColor: 'transparent',
+      }}>
         {title}
       </Typography>
     </Box>
 
-    <Typography variant="subtitle1" color="error" sx={{ mb: 2, fontWeight: 500 }}>
-      Key Issues:
-    </Typography>
-    <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
-      {feedback.key_issues}
-    </Typography>
-
-    <Typography variant="subtitle1" color="primary" sx={{ mb: 2, fontWeight: 500 }}>
-      Recommended Improvements:
-    </Typography>
-    <Box component="ul" sx={{ mb: 3, pl: 2 }}>
-      {feedback.improvements.map((improvement, index) => (
-        <Typography key={index} component="li" variant="body1" sx={{ mb: 1, color: 'text.secondary' }}>
-          {improvement}
+    {/* Key Issues Section */}
+    <Box sx={{ mb: 4 }}>
+      <Typography 
+        variant="subtitle1" 
+        sx={{ 
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          color: 'error.main',
+          fontWeight: 600,
+          mb: 2,
+        }}
+      >
+        <span style={{ fontSize: '1.2rem' }}>⚠️</span> Key Areas for Improvement
+      </Typography>
+      <Paper 
+        elevation={0} 
+        sx={{ 
+          p: 2.5,
+          backgroundColor: 'rgba(211, 47, 47, 0.04)', // Light red background
+          borderRadius: 2,
+          borderLeft: '4px solid',
+          borderColor: 'error.main',
+        }}
+      >
+        <Typography variant="body1" sx={{ color: 'text.primary' }}>
+          {feedback.key_issues}
         </Typography>
-      ))}
+      </Paper>
     </Box>
 
-    <Typography variant="subtitle1" color="success.main" sx={{ mb: 2, fontWeight: 500 }}>
-      Successful Examples:
-    </Typography>
-    <Box component="ul" sx={{ mb: 3, pl: 2 }}>
-      {feedback.examples.map((example, index) => (
-        <Typography key={index} component="li" variant="body1" sx={{ mb: 1, color: 'text.secondary' }}>
-          {example}
-        </Typography>
-      ))}
+    {/* Improvements Section */}
+    <Box sx={{ mb: 4 }}>
+      <Typography 
+        variant="subtitle1" 
+        sx={{ 
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          color: MODERN_COLORS.primary.main,
+          fontWeight: 600,
+          mb: 2,
+        }}
+      >
+        <span style={{ fontSize: '1.2rem' }}>💡</span> Recommended Actions
+      </Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {feedback.improvements.map((improvement, index) => (
+          <Paper
+            key={index}
+            elevation={0}
+            sx={{
+              p: 2.5,
+              backgroundColor: 'rgba(0, 98, 244, 0.04)',
+              borderRadius: 2,
+              borderLeft: '4px solid',
+              borderColor: MODERN_COLORS.primary.main,
+            }}
+          >
+            <Typography variant="body1" sx={{ color: 'text.primary' }}>
+              {improvement}
+            </Typography>
+          </Paper>
+        ))}
+      </Box>
     </Box>
 
-    <Typography variant="subtitle1" color="info.main" sx={{ mb: 2, fontWeight: 500 }}>
-      Best Practices:
-    </Typography>
-    <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-      {feedback.best_practices}
-    </Typography>
+    {/* Examples Section */}
+    <Box sx={{ mb: 4 }}>
+      <Typography 
+        variant="subtitle1" 
+        sx={{ 
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          color: 'success.main',
+          fontWeight: 600,
+          mb: 2,
+        }}
+      >
+        <span style={{ fontSize: '1.2rem' }}>✨</span> Successful Examples
+      </Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {feedback.examples.map((example, index) => (
+          <Paper
+            key={index}
+            elevation={0}
+            sx={{
+              p: 2.5,
+              backgroundColor: 'rgba(76, 175, 80, 0.04)', // Light green background
+              borderRadius: 2,
+              borderLeft: '4px solid',
+              borderColor: 'success.main',
+            }}
+          >
+            <Typography variant="body1" sx={{ color: 'text.primary' }}>
+              {example}
+            </Typography>
+          </Paper>
+        ))}
+      </Box>
+    </Box>
+
+    {/* Best Practices Section */}
+    <Box>
+      <Typography 
+        variant="subtitle1" 
+        sx={{ 
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          color: MODERN_COLORS.secondary.main,
+          fontWeight: 600,
+          mb: 2,
+        }}
+      >
+        <span style={{ fontSize: '1.2rem' }}>🎯</span> Industry Best Practices
+      </Typography>
+      <Paper
+        elevation={0}
+        sx={{
+          p: 2.5,
+          backgroundColor: 'rgba(0, 198, 190, 0.04)',
+          borderRadius: 2,
+          borderLeft: '4px solid',
+          borderColor: MODERN_COLORS.secondary.main,
+        }}
+      >
+        <Typography variant="body1" sx={{ color: 'text.primary' }}>
+          {feedback.best_practices}
+        </Typography>
+      </Paper>
+    </Box>
+
+    {/* Real Resume Examples Section */}
+    {feedback.real_resume_bullets && (
+      <RealExampleSection 
+        examples={feedback.real_resume_bullets} 
+        category={title.split(' ')[0]} // "Technical" from "Technical Skills"
+      />
+    )}
   </Paper>
 );
 
@@ -235,6 +497,9 @@ export default function Home() {
   const [scores, setScores] = useState<ScoreData | null>(null);
   const [generatingPDF, setGeneratingPDF] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [supportDialogOpen, setSupportDialogOpen] = useState(false);
+  const [supportEmail, setSupportEmail] = useState('');
+  const [supportMessage, setSupportMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -619,13 +884,108 @@ export default function Home() {
 
   return (
     <>
-      <AppBar position="fixed" color="default" elevation={1}>
-        <Toolbar>
-          <AssessmentIcon sx={{ mr: 2, color: 'primary.main' }} />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700 }}>
-            AI Resume Optimizer
-          </Typography>
-        </Toolbar>
+      <AppBar 
+        position="fixed" 
+        color="default" 
+        elevation={0}
+        sx={{
+          borderBottom: '1px solid',
+          borderColor: 'rgba(0, 0, 0, 0.06)',
+          backdropFilter: 'blur(20px)',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        }}
+      >
+        <Container maxWidth="xl">
+          <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <RocketLaunchIcon 
+                sx={{ 
+                  mr: 2, 
+                  color: MODERN_COLORS.primary.main,
+                  fontSize: 32,
+                  transform: 'rotate(45deg)',
+                }} 
+              />
+              <Typography 
+                variant="h5" 
+                component="div" 
+                sx={{ 
+                  fontWeight: 800,
+                  background: `linear-gradient(45deg, ${MODERN_COLORS.primary.main} 30%, ${MODERN_COLORS.secondary.main} 90%)`,
+                  backgroundClip: 'text',
+                  textFillColor: 'transparent',
+                  display: { xs: 'none', sm: 'block' }
+                }}
+              >
+                ResumeRise
+              </Typography>
+            </Box>
+
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              gap: { xs: 1, sm: 2 }
+            }}>
+              <Button
+                color="inherit"
+                startIcon={<InfoOutlinedIcon />}
+                sx={{ 
+                  display: { xs: 'none', md: 'flex' },
+                  borderRadius: 2,
+                  px: 2,
+                  py: 1,
+                  color: MODERN_COLORS.text.secondary,
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 98, 244, 0.04)',
+                    color: MODERN_COLORS.primary.main,
+                  },
+                  transition: 'all 0.2s ease-in-out',
+                }}
+              >
+                About
+              </Button>
+
+              <Button
+                color="inherit"
+                startIcon={<HelpOutlineIcon />}
+                sx={{ 
+                  display: { xs: 'none', md: 'flex' },
+                  borderRadius: 2,
+                  px: 2,
+                  py: 1,
+                  color: MODERN_COLORS.text.secondary,
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 98, 244, 0.04)',
+                    color: MODERN_COLORS.primary.main,
+                  },
+                  transition: 'all 0.2s ease-in-out',
+                }}
+              >
+                Help
+              </Button>
+
+              <Button
+                variant="contained"
+                startIcon={<SupportAgentIcon />}
+                onClick={() => setSupportDialogOpen(true)}
+                sx={{ 
+                  borderRadius: 2,
+                  px: 3,
+                  py: 1,
+                  backgroundColor: MODERN_COLORS.primary.main,
+                  boxShadow: 'none',
+                  '&:hover': {
+                    backgroundColor: MODERN_COLORS.primary.dark,
+                    boxShadow: '0 4px 12px rgba(0, 98, 244, 0.15)',
+                  },
+                  transition: 'all 0.2s ease-in-out',
+                }}
+              >
+                Support
+              </Button>
+            </Box>
+          </Toolbar>
+        </Container>
       </AppBar>
 
       <ErrorAlert />
@@ -636,20 +996,119 @@ export default function Home() {
           minHeight: '100vh',
           pt: 12,
           pb: 8,
-          px: 4,
+          px: { xs: 2, sm: 4 },
         }}>
-          <Box sx={{ maxWidth: 800, mx: 'auto', mb: 6, textAlign: 'center' }}>
+          <Box sx={{ 
+            maxWidth: 800, 
+            mx: 'auto', 
+            mb: 6, 
+            textAlign: 'center',
+            position: 'relative',
+          }}>
             <Typography variant="h3" gutterBottom sx={{ 
-              fontWeight: 700,
-              background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+              fontWeight: 800,
+              background: `linear-gradient(45deg, ${MODERN_COLORS.primary.main} 30%, ${MODERN_COLORS.secondary.main} 90%)`,
               backgroundClip: 'text',
               textFillColor: 'transparent',
+              position: 'relative',
+              display: 'inline-block',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: '-10px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '60px',
+                height: '4px',
+                background: `linear-gradient(45deg, ${MODERN_COLORS.primary.main} 30%, ${MODERN_COLORS.secondary.main} 90%)`,
+                borderRadius: '2px',
+              }
             }}>
-              Optimize Your Resume with AI
+              Craft Your Path to Top Tech Companies
             </Typography>
-            <Typography variant="h6" sx={{ color: 'text.secondary', mb: 4 }}>
-              Get instant AI-powered feedback to match your dream job requirements
+            
+            <Typography variant="h6" sx={{ 
+              color: MODERN_COLORS.text.secondary, 
+              mb: 4,
+              mt: 4,
+              fontWeight: 400,
+              maxWidth: '600px',
+              mx: 'auto',
+            }}>
+              Get personalized feedback based on successful resumes that landed interviews at leading tech companies
             </Typography>
+
+            <Box sx={{ 
+              display: 'flex', 
+              flexWrap: 'wrap', 
+              justifyContent: 'center', 
+              gap: 1,
+              mb: 4,
+              mx: 'auto',
+              maxWidth: '600px',
+            }}>
+              {TOP_COMPANIES.map((company) => (
+                <Typography
+                  key={company.name}
+                  variant="body2"
+                  sx={{
+                    px: 2,
+                    py: 0.5,
+                    borderRadius: 4,
+                    backgroundColor: 'rgba(0, 98, 244, 0.04)',
+                    color: MODERN_COLORS.text.secondary,
+                    fontSize: '0.875rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                  }}
+                >
+                  {company.name}
+                </Typography>
+              ))}
+            </Box>
+
+            <Box sx={{ 
+              display: 'flex', 
+              gap: 2, 
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              mb: 4,
+            }}>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1,
+                color: MODERN_COLORS.text.secondary,
+              }}>
+                <WorkIcon sx={{ fontSize: 20 }} />
+                <Typography variant="body2">
+                  500+ Successful Resumes
+                </Typography>
+              </Box>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1,
+                color: MODERN_COLORS.text.secondary,
+              }}>
+                <AssessmentIcon sx={{ fontSize: 20 }} />
+                <Typography variant="body2">
+                  Data-Driven Feedback
+                </Typography>
+              </Box>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1,
+                color: MODERN_COLORS.text.secondary,
+              }}>
+                <RocketLaunchIcon sx={{ fontSize: 20 }} />
+                <Typography variant="body2">
+                  Industry-Specific Insights
+                </Typography>
+              </Box>
+            </Box>
           </Box>
 
           {/* Score Overview */}
@@ -813,7 +1272,7 @@ export default function Home() {
                     Ready to Analyze Your Resume
                   </Typography>
                   <Typography variant="body1" align="center" color="text.secondary">
-                    Upload your resume and provide job details to receive AI-powered feedback
+                    Upload your resume and provide job details to receive pesonalized feedback
                   </Typography>
                 </Box>
               )}
