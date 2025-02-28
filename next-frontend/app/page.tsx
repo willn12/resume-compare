@@ -148,7 +148,7 @@ const RealExampleSection = ({
               color: MODERN_COLORS.text.primary,
             }}
           >
-            Successful {category} Examples from Top Resumes
+            Successful Examples from Top Resumes
           </Typography>
           <Chip 
             label={`${totalExamples} examples`}
@@ -406,7 +406,7 @@ const StepCard = ({
     {feedback.real_resume_bullets && (
       <RealExampleSection 
         examples={feedback.real_resume_bullets} 
-        category={title.split(' ')[0]} // "Technical" from "Technical Skills"
+        category={title} // "Technical" from "Technical Skills"
       />
     )}
   </Paper>
@@ -500,6 +500,8 @@ export default function Home() {
   const [supportDialogOpen, setSupportDialogOpen] = useState(false);
   const [supportEmail, setSupportEmail] = useState('');
   const [supportMessage, setSupportMessage] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactMessage, setContactMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -882,6 +884,13 @@ export default function Home() {
     );
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       <AppBar 
@@ -927,10 +936,8 @@ export default function Home() {
               gap: { xs: 1, sm: 2 }
             }}>
               <Button
-                color="inherit"
-                startIcon={<InfoOutlinedIcon />}
+                onClick={() => scrollToSection('about')}
                 sx={{ 
-                  display: { xs: 'none', md: 'flex' },
                   borderRadius: 2,
                   px: 2,
                   py: 1,
@@ -940,16 +947,26 @@ export default function Home() {
                     color: MODERN_COLORS.primary.main,
                   },
                   transition: 'all 0.2s ease-in-out',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
                 }}
               >
-                About
+                <InfoOutlinedIcon sx={{ fontSize: 20 }} />
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    fontWeight: 500,
+                    display: { xs: 'none', md: 'block' }
+                  }}
+                >
+                  About
+                </Typography>
               </Button>
 
               <Button
-                color="inherit"
-                startIcon={<HelpOutlineIcon />}
+                onClick={() => scrollToSection('help')}
                 sx={{ 
-                  display: { xs: 'none', md: 'flex' },
                   borderRadius: 2,
                   px: 2,
                   py: 1,
@@ -959,29 +976,21 @@ export default function Home() {
                     color: MODERN_COLORS.primary.main,
                   },
                   transition: 'all 0.2s ease-in-out',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
                 }}
               >
-                Help
-              </Button>
-
-              <Button
-                variant="contained"
-                startIcon={<SupportAgentIcon />}
-                onClick={() => setSupportDialogOpen(true)}
-                sx={{ 
-                  borderRadius: 2,
-                  px: 3,
-                  py: 1,
-                  backgroundColor: MODERN_COLORS.primary.main,
-                  boxShadow: 'none',
-                  '&:hover': {
-                    backgroundColor: MODERN_COLORS.primary.dark,
-                    boxShadow: '0 4px 12px rgba(0, 98, 244, 0.15)',
-                  },
-                  transition: 'all 0.2s ease-in-out',
-                }}
-              >
-                Support
+                <HelpOutlineIcon sx={{ fontSize: 20 }} />
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    fontWeight: 500,
+                    display: { xs: 'none', md: 'block' }
+                  }}
+                >
+                  Help
+                </Typography>
               </Button>
             </Box>
           </Toolbar>
@@ -1007,9 +1016,7 @@ export default function Home() {
           }}>
             <Typography variant="h3" gutterBottom sx={{ 
               fontWeight: 800,
-              background: `linear-gradient(45deg, ${MODERN_COLORS.primary.main} 30%, ${MODERN_COLORS.secondary.main} 90%)`,
-              backgroundClip: 'text',
-              textFillColor: 'transparent',
+              color: MODERN_COLORS.primary.main,
               position: 'relative',
               display: 'inline-block',
               '&::after': {
@@ -1020,7 +1027,7 @@ export default function Home() {
                 transform: 'translateX(-50%)',
                 width: '60px',
                 height: '4px',
-                background: `linear-gradient(45deg, ${MODERN_COLORS.primary.main} 30%, ${MODERN_COLORS.secondary.main} 90%)`,
+                backgroundColor: MODERN_COLORS.primary.main,
                 borderRadius: '2px',
               }
             }}>
@@ -1277,6 +1284,235 @@ export default function Home() {
                 </Box>
               )}
             </Paper>
+          </Box>
+
+          {/* Add About and Help sections at the bottom */}
+          <Box sx={{ 
+            mt: 8,
+            pt: 8,
+            backgroundColor: 'grey.50',
+            borderRadius: 4,
+            overflow: 'hidden',
+          }}>
+            {/* About Section */}
+            <Box id="about" sx={{ mb: 8, px: { xs: 2, sm: 4, md: 8 } }}>
+              <Typography 
+                variant="h4" 
+                gutterBottom 
+                sx={{ 
+                  fontWeight: 700, 
+                  color: MODERN_COLORS.primary.main,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2,
+                  mb: 4,
+                }}
+              >
+                <InfoOutlinedIcon sx={{ fontSize: 32 }} />
+                About ResumeRise
+              </Typography>
+              <Grid container spacing={4}>
+                <Grid item xs={12} md={6}>
+                  <Paper 
+                    elevation={0}
+                    sx={{ 
+                      p: 4, 
+                      height: '100%',
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: 'grey.200',
+                    }}
+                  >
+                    <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: MODERN_COLORS.primary.main }}>
+                      Our Mission
+                    </Typography>
+                    <Typography variant="body1" paragraph sx={{ color: 'text.secondary' }}>
+                      ResumeRise is an AI-powered resume analysis tool designed to help job seekers optimize their resumes for top tech companies. Our platform leverages advanced AI technology to provide detailed, actionable feedback based on successful resumes from leading technology firms.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Paper 
+                    elevation={0}
+                    sx={{ 
+                      p: 4, 
+                      height: '100%',
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: 'grey.200',
+                    }}
+                  >
+                    <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: MODERN_COLORS.primary.main }}>
+                      How It Works
+                    </Typography>
+                    <Typography variant="body1" paragraph sx={{ color: 'text.secondary' }}>
+                      We analyze your resume across multiple dimensions including technical skills, soft skills, formatting, and measurable results to ensure your application stands out in competitive hiring processes.
+                    </Typography>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Box>
+
+            {/* Divider with spacing */}
+            <Box sx={{ px: { xs: 2, sm: 4, md: 8 } }}>
+              <Divider sx={{ my: 6 }} />
+            </Box>
+
+            {/* Help Section */}
+            <Box id="help" sx={{ mb: 8, px: { xs: 2, sm: 4, md: 8 } }}>
+              <Typography 
+                variant="h4" 
+                gutterBottom 
+                sx={{ 
+                  fontWeight: 700, 
+                  color: MODERN_COLORS.primary.main,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2,
+                  mb: 4,
+                }}
+              >
+                <HelpOutlineIcon sx={{ fontSize: 32 }} />
+                Help & Support
+              </Typography>
+              
+              <Grid container spacing={4}>
+                {/* Contact Form */}
+                <Grid item xs={12} md={8}>
+                  <Paper 
+                    elevation={0} 
+                    sx={{ 
+                      p: 4, 
+                      borderRadius: 2,
+                      backgroundColor: 'white',
+                      border: '1px solid',
+                      borderColor: 'grey.200',
+                    }}
+                  >
+                    <Typography 
+                      variant="h6" 
+                      gutterBottom 
+                      sx={{ 
+                        fontWeight: 600,
+                        color: MODERN_COLORS.primary.main,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        mb: 3,
+                      }}
+                    >
+                      <SupportAgentIcon />
+                      Contact Support
+                    </Typography>
+                    <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                      <TextField
+                        label="Your Email"
+                        type="email"
+                        value={contactEmail}
+                        onChange={(e) => setContactEmail(e.target.value)}
+                        required
+                        fullWidth
+                        variant="outlined"
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            backgroundColor: 'grey.50',
+                          }
+                        }}
+                      />
+                      <TextField
+                        label="Message"
+                        multiline
+                        rows={4}
+                        value={contactMessage}
+                        onChange={(e) => setContactMessage(e.target.value)}
+                        required
+                        fullWidth
+                        variant="outlined"
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            backgroundColor: 'grey.50',
+                          }
+                        }}
+                      />
+                      <Button 
+                        variant="contained" 
+                        sx={{ 
+                          alignSelf: 'flex-start',
+                          px: 4,
+                          py: 1.5,
+                          fontWeight: 600,
+                          borderRadius: 2,
+                        }}
+                        onClick={() => {
+                          console.log('Contact form submitted:', { contactEmail, contactMessage });
+                          setContactEmail('');
+                          setContactMessage('');
+                        }}
+                      >
+                        Submit Request
+                      </Button>
+                    </Box>
+                  </Paper>
+                </Grid>
+
+                {/* FAQ Section */}
+                <Grid item xs={12} md={4}>
+                  <Paper 
+                    elevation={0} 
+                    sx={{ 
+                      p: 4, 
+                      borderRadius: 2,
+                      backgroundColor: 'white',
+                      border: '1px solid',
+                      borderColor: 'grey.200',
+                      height: '100%',
+                    }}
+                  >
+                    <Typography 
+                      variant="h6" 
+                      gutterBottom 
+                      sx={{ 
+                        fontWeight: 600,
+                        color: MODERN_COLORS.primary.main,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        mb: 3,
+                      }}
+                    >
+                      <AutoAwesomeIcon />
+                      Quick Tips
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      {[
+                        "Upload your resume in PDF format",
+                        "Include a job description for better results",
+                        "Ensure your resume is ATS-friendly",
+                        "Quantify achievements where possible"
+                      ].map((tip, index) => (
+                        <Box 
+                          key={index}
+                          sx={{ 
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 2,
+                            p: 2,
+                            borderRadius: 1,
+                            backgroundColor: 'grey.50',
+                          }}
+                        >
+                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            {tip}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Box>
           </Box>
         </Box>
       </Container>
