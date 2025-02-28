@@ -525,18 +525,20 @@ export default function Home() {
     }
 
     try {
+      console.log('Sending request to:', `${API_URL}/upload_resume`);
+      
       const response = await fetch(`${API_URL}/upload_resume`, {
         method: 'POST',
         body: formData,
         headers: {
           'Accept': 'application/json',
         },
-        mode: 'cors',
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to get feedback');
+        const errorText = await response.text();
+        console.error('Server response:', errorText);
+        throw new Error(errorText || 'Failed to get feedback');
       }
 
       const data = await response.json();
@@ -547,7 +549,7 @@ export default function Home() {
       });
       setFeedback(data.resume_feedback);
     } catch (err) {
-      console.error('Error:', err);
+      console.error('Error details:', err);
       setErrorMessage(err instanceof Error ? err.message : 'Error submitting resume. Please try again.');
       setShowError(true);
     } finally {

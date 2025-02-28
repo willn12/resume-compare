@@ -85,35 +85,19 @@ async def upload_resume(
     job_description: str = Form(None)
 ):
     try:
-        # Validate file size (e.g., max 10MB)
-        file_size = 0
-        chunk_size = 1024  # 1KB chunks
-        while chunk := await file.read(chunk_size):
-            file_size += len(chunk)
-            if file_size > 10 * 1024 * 1024:  # 10MB
-                raise HTTPException(
-                    status_code=400, 
-                    detail="File size too large. Maximum size is 10MB"
-                )
-        
-        # Reset file pointer after reading
-        await file.seek(0)
-        
-        # Extract and validate resume text
+        # Extract text directly without the chunk reading
         resume_text = await extract_text_from_pdf(file)
         
-        # Check if resume text is too short (likely invalid or empty PDF)
-        if len(resume_text.strip()) < 100:  # Adjust minimum length as needed
+        if len(resume_text.strip()) < 100:
             raise HTTPException(
                 status_code=400,
-                detail="Resume appears to be empty or contains too little text. Please check the PDF file."
+                detail="Resume appears to be empty or contains too little text"
             )
             
-        # Check if resume text is too long (likely not a resume)
-        if len(resume_text.strip()) > 10000:  # Adjust maximum length as needed
+        if len(resume_text.strip()) > 10000:
             raise HTTPException(
                 status_code=400,
-                detail="Document appears too long for a resume. Please ensure you're uploading a resume and not a different document."
+                detail="Document appears too long for a resume"
             )
 
         prompt = f"""As an elite ATS system and hiring manager with experience at top-tier tech companies (FAANG and industry leaders), critically analyze this resume for a {job_title} position at {company}. Provide expert-level, data-driven feedback that will directly increase this candidate's chances of landing an interview.
