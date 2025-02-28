@@ -105,15 +105,64 @@ async def upload_resume(
                 detail="Document appears too long for a resume. Please ensure you're uploading a resume and not a different document."
             )
 
-        json_format = '''
-{
-    "technical_skills": <score>,
-    "soft_skills": <score>,
-    "formatting": <score>,
-    "measurable_results": <score>,
-    "core_values": <score>,
-    "section_feedback": {
-        "technical_skills": {
+        prompt = f"""As an elite ATS system and hiring manager with experience at top-tier tech companies (FAANG and industry leaders), critically analyze this resume for a {job_title} position at {company}. Provide expert-level, data-driven feedback that will directly increase this candidate's chances of landing an interview.
+
+Your evaluation must be brutally honest, highly specific, and backed by real-world successful examples. The goal is to transform this resume into a top 1% application by aligning it with what has worked for candidates securing interviews and offers at leading tech firms.
+
+For each section below, provide:
+1. A score out of 100 (be strict—FAANG-level resumes rarely score above 90)
+2. Key issues identified
+3. Specific improvements needed (3-4 highly detailed points)
+4. Real examples from successful candidates (must include actual metrics and technologies)
+5. Best practices from top-performing resumes
+
+Example of Expected Depth in Feedback:
+❌ "Led a team to improve system performance."
+✅ "Managed a 6-person backend team to optimize API response times by 47% through Redis caching and GraphQL query optimization, reducing server costs by $12K/month."
+
+Sections to Analyze (with Weighting):
+
+1. Technical Skills (20%)
+- Keyword Optimization: Compare resume keywords against FAANG-level {job_title} resumes
+- Tech Stack Alignment: Identify missing technologies/tools that {company} prioritizes
+- Depth vs. Breadth: Does the candidate showcase mastery in key skills or only list buzzwords?
+- Certifications & Skills: Recommend top industry-recognized certifications that improve interview chances
+
+2. Soft Skills & Leadership (20%)
+- Executive Presence: How effectively does the resume demonstrate leadership, ownership, and influence?
+- Problem-Solving & Decision-Making: Are challenges and solutions presented with clear impact?
+- Cross-Team Collaboration: Evidence of working across functions (e.g., engineering, product, design)?
+- Proactivity: Does the candidate demonstrate initiative and innovation beyond core responsibilities?
+
+3. Formatting & ATS Optimization (20%)
+- ATS Compatibility: Identify missing elements that could cause rejection
+- Readability & Hierarchy: Is information structured for hiring managers scanning in <6 seconds?
+- Consistent Style: Ensure uniform font, bullet points, and section spacing
+- Space Utilization: Is the most impactful content prioritized?
+
+4. Measurable Impact & Achievements (20%)
+- Impact Metrics: Evaluate if achievements are quantified (e.g., revenue impact, efficiency gains)
+- Comparison to Top Candidates: Are the numbers strong enough vs. successful hires?
+- Results-Oriented Writing: Ensure each bullet follows a "Problem → Action → Result" format
+- Missed Opportunities: Identify places where more data, KPIs, or business impact should be included
+
+5. Company & Role Alignment (20%)
+- Culture Fit: Analyze alignment with {company}'s mission, values, and priorities
+- Industry-Specific Differentiation: How well does the resume reflect {company}'s unique challenges?
+- Top Candidate Patterns: Identify what consistently appears in successful resumes at {company}
+- Branding & Positioning: Does the candidate present themselves as a top-tier, high-impact hire?
+
+For each section, provide approximately 20 real resume bullets from successful candidates, organized by relevant categories. These bullets should demonstrate best practices and have proven success in landing interviews at top tech companies. these are included in  the real_resume_bullets section.
+
+Return the response in this JSON format:
+{{
+    "technical_skills": "<score>",
+    "soft_skills": "<score>",
+    "formatting": "<score>",
+    "measurable_results": "<score>",
+    "core_values": "<score>",
+    "section_feedback": {{
+        "technical_skills": {{
             "key_issues": "<main problems identified>",
             "improvements": [
                 "<specific improvement 1>",
@@ -121,109 +170,99 @@ async def upload_resume(
                 "<specific improvement 3>"
             ],
             "examples": [
-                "Real example of how a successful candidate presented their technical skills, including specific technologies and frameworks",
-                "Another specific example showing technology stack presentation and proficiency levels"
+                "Real example showing specific technologies and metrics",
+                "Another specific example with quantifiable results"
             ],
-            "best_practices": "<common patterns in successful resumes>"
-        },
-        "soft_skills": {
+            "best_practices": "<patterns from successful resumes>",
+            "real_resume_bullets": [
+                {{
+                    "category": "System Design & Architecture",
+                    "bullets": [
+                    //10 bullets here
+                        "Architected and implemented a microservices-based payment processing system handling 2M+ daily transactions using Java Spring Boot and Kafka, reducing latency by 40%",
+                        "Designed and deployed distributed caching solution using Redis cluster, improving API response times by 65% and reducing database load by 40%"
+                        //10 bullets here
+                    ]
+                }},
+                {{
+                    "category": "Cloud & Infrastructure",
+                    "bullets": [
+                    //10 bullets here
+                        "Led migration of 200+ services to AWS, implementing Infrastructure as Code using Terraform and reducing deployment time by 65%",
+                        "Architected and implemented auto-scaling Kubernetes clusters on AWS EKS, reducing infrastructure costs by 45% while improving availability to 99.99%"
+                        //10 bullets here
+                    ]
+                }}
+            ]
+        }},
+        "soft_skills": {{
             "key_issues": "<main problems identified>",
             "improvements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"],
-            "examples": [
-                "Concrete example of leadership achievement with metrics and outcome",
-                "Specific collaboration example showing cross-functional team impact"
-            ],
-            "best_practices": "<best practices>"
-        },
-        "formatting": {
+            "examples": ["<example 1>", "<example 2>"],
+            "best_practices": "<patterns from successful resumes>",
+            "real_resume_bullets": [
+                {{
+                    "category": "Leadership & Management",
+                    "bullets": [
+                        "Led cross-functional team of 12 engineers, delivering a mission-critical payment platform that increased transaction volume by 300%",
+                        "Mentored 5 junior developers through structured training program, with all achieving promotion within 18 months"
+                        //10 bullets here
+                    ]
+                }}
+            ]
+        }},
+        "formatting": {{
             "key_issues": "<main problems identified>",
             "improvements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"],
-            "examples": [
-                "Example of clean, ATS-friendly bullet point structure with proper keywords",
-                "Sample header format that successfully passed ATS screening"
-            ],
-            "best_practices": "<best practices>"
-        },
-        "measurable_results": {
+            "examples": ["<example 1>", "<example 2>"],
+            "best_practices": "<patterns from successful resumes>",
+            "real_resume_bullets": [
+                {{
+                    "category": "Structure & Organization",
+                    "bullets": [
+                        "Technical Skills: Python (Django, Flask), Java (Spring), AWS (ECS, Lambda), Kubernetes, Docker, CI/CD",
+                        "Achievements highlighted with metrics: Reduced cloud costs by 40%, Improved API performance by 65%"
+                        //10 bullets here
+                    ]
+                }}
+            ]
+        }},
+        "measurable_results": {{
             "key_issues": "<main problems identified>",
             "improvements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"],
-            "examples": [
-                "Real metric-driven result showing revenue/cost impact with percentages",
-                "Specific project outcome with team size, timeline, and business impact"
-            ],
-            "best_practices": "<best practices>"
-        },
-        "core_values": {
+            "examples": ["<example 1>", "<example 2>"],
+            "best_practices": "<patterns from successful resumes>",
+            "real_resume_bullets": [
+                {{
+                    "category": "Performance Improvements",
+                    "bullets": [
+                        "Optimized database queries reducing average response time from 2s to 200ms, improving user satisfaction by 45%",
+                        "Implemented caching strategy that reduced server load by 60% while handling 2x increase in daily active users"
+                        //10 bullets here
+                    ]
+                }}
+            ]
+        }},
+        "core_values": {{
             "key_issues": "<main problems identified>",
             "improvements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"],
-            "examples": [
-                "Example showing alignment with company's innovation culture through specific project",
-                "Demonstration of company's customer-first value through measurable impact"
-            ],
-            "best_practices": "<best practices>"
-        }
-    }
-}
-'''
-        
-        prompt = f"""As an expert ATS system and hiring manager at top tech companies, analyze this resume for a {job_title} position at {company}. Be critical in your scoring and provide detailed, actionable feedback. Compare it with successful resumes that have secured interviews and offers at FAANG/top tech companies.
+            "examples": ["<example 1>", "<example 2>"],
+            "best_practices": "<patterns from successful resumes>",
+            "real_resume_bullets": [
+                {{
+                    "category": "Innovation & Impact",
+                    "bullets": [
+                        "Pioneered adoption of microservices architecture, becoming internal champion and reducing deployment conflicts by 90%",
+                        "Initiated and led company-wide migration to TypeScript, reducing production bugs by 45% in 6 months"
+                        //10 bullets here
+                    ]
+                }}
+            ]
+        }}
+    }}
+}}
 
-When providing examples, be extremely specific and realistic. Include actual metrics, technologies, and achievements that have worked for successful candidates. Avoid generic statements. Each example should be detailed enough that someone could use it as a direct template for their own resume.
-
-For each section below, provide:
-1. A score out of 100
-2. 3-4 specific bullet points of improvements needed
-3. Real, detailed examples from successful candidates (anonymized but with specific metrics, technologies, and achievements)
-4. Common patterns seen in top-performing resumes
-
-Example of the level of detail expected in examples:
-❌ "Led a team to improve system performance"
-✅ "Led a 6-person backend team to optimize API response times by 47% through implementation of Redis caching and GraphQL query optimization, reducing server costs by $12K/month"
-
-Sections to analyze:
-
-1. Technical Skills (20% of total)
-- Compare keywords present vs. successful {job_title} resumes
-- Gap analysis between this resume's tech stack and what {company} typically requires
-- Missing critical technical skills that successful candidates demonstrate
-- Recommended certifications/skills that increase interview chances
-
-2. Soft Skills (20% of total)
-- Leadership and communication demonstration
-- Problem-solving abilities presentation
-- Team collaboration examples
-- Initiative and proactivity indicators
-
-3. Formatting (20% of total)
-- ATS compatibility analysis
-- Visual hierarchy effectiveness
-- Consistency in style and presentation
-- Space utilization and readability
-
-4. Measurable Results (20% of total)
-- Compare achievement metrics with successful candidates
-- Analysis of quantifiable results
-- Project outcome presentations
-- Missing impact metrics that top candidates typically showcase
-
-5. Company Core Values Alignment (20% of total)
-- Alignment with {company}'s culture and values
-- Specific patterns from successful {company} resumes
-- Key differentiators that successful candidates typically showcase
-- Cultural fit indicators
-
-For the examples in each section, ensure they are:
-- Specific to the {job_title} role
-- Relevant to {company}'s industry and scale
-- Include actual metrics and technologies where applicable
-- Show clear cause-and-effect relationships
-- Demonstrate both technical and business impact
-- Are formatted in a way that passes ATS screening
-
-Return the response in this JSON format:
-{json_format}
-
-Resume:
+Resume Text:
 {resume_text}"""
 
         response = openai.ChatCompletion.create(
@@ -235,50 +274,55 @@ Resume:
             temperature=0.7
         )
         
-        # Log the raw response
-        print("GPT-4 Raw Response:", response.choices[0].message.content)
+        # Log the raw response for debugging
+        print("Raw GPT Response:", response.choices[0].message.content)
         
         try:
             feedback_data = json.loads(response.choices[0].message.content)
+            
+            def parse_score(score):
+                if isinstance(score, (int, float)):
+                    return float(score)
+                try:
+                    # Remove any non-numeric characters except decimal points
+                    score_str = ''.join(c for c in str(score) if c.isdigit() or c == '.')
+                    return float(score_str)
+                except (ValueError, TypeError):
+                    return 0.0  # Default score if parsing fails
+            
+            # Parse all scores using the helper function
+            scores = {
+                "technical_skills": parse_score(feedback_data.get("technical_skills", 0)),
+                "soft_skills": parse_score(feedback_data.get("soft_skills", 0)),
+                "formatting": parse_score(feedback_data.get("formatting", 0)),
+                "measurable_results": parse_score(feedback_data.get("measurable_results", 0)),
+                "core_values": parse_score(feedback_data.get("core_values", 0))
+            }
+            
+            # Calculate overall score
+            overall_score = sum(scores.values()) / len(scores)
+            
+            # Return data with all numeric scores
+            return {
+                **scores,
+                "overall_score": overall_score,
+                "section_feedback": feedback_data["section_feedback"]
+            }
+            
         except json.JSONDecodeError as json_error:
             print("JSON Parsing Error:", str(json_error))
             print("Failed to parse response:", response.choices[0].message.content)
             raise HTTPException(
                 status_code=500, 
-                detail="Failed to analyze resume. Please try again or contact support if the issue persists."
+                detail="Failed to analyze resume. Please try again."
             )
         
-        # Calculate overall score
-        scores = [
-            feedback_data["technical_skills"],
-            feedback_data["soft_skills"],
-            feedback_data["formatting"],
-            feedback_data["measurable_results"],
-            feedback_data["core_values"]
-        ]
-        overall_score = sum(scores) / len(scores)
-        
-        # Return data in the expected format
-        return {
-            "technical_skills": feedback_data["technical_skills"],
-            "soft_skills": feedback_data["soft_skills"],
-            "formatting": feedback_data["formatting"],
-            "measurable_results": feedback_data["measurable_results"],
-            "core_values": feedback_data["core_values"],
-            "overall_score": overall_score,
-            "section_feedback": feedback_data["section_feedback"]
-        }
-        
-    except HTTPException as http_error:
-        # Re-raise HTTP exceptions with their original status code and detail
-        raise
     except Exception as e:
         print(f"Error type: {type(e)}")
         print(f"Error details: {str(e)}")
-        # Return a generic error message for unexpected errors
         raise HTTPException(
             status_code=500,
-            detail="An unexpected error occurred while processing your resume. Please try again."
+            detail="An unexpected error occurred while processing your resume."
         )
 
 @app.post("/generate_improved_resume")
