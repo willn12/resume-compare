@@ -13,11 +13,14 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from io import BytesIO
+import logging
 from fastapi.responses import StreamingResponse
 
 load_dotenv()
 
 app = FastAPI()
+
+logger = logging.getLogger(__name__)
 
 # Get OpenAI API key from environment variable for security
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -88,7 +91,8 @@ async def upload_resume(
     job_description: str = Form(None)
 ):
     try:
-        print("WE TRIED")
+        
+        logger.debug("WE tried to upload resume")
         # Extract text directly without the chunk reading
         resume_text = await extract_text_from_pdf(file)
         
@@ -309,8 +313,9 @@ Resume Text:
             )
         
     except Exception as e:
-        print(f"Error type: {type(e)}")
-        print(f"Error details: {str(e)}")
+        logger.debug("Inside Exception")
+        logger.debug(f"Error type: {type(e)}")
+        logger.debug(f"Error detaiils: {str(e)}")
         raise HTTPException(
             status_code=500,
             detail="An unexpected error occurred while processing your resume." & str(e)
