@@ -318,7 +318,7 @@ Resume Text:
         logger.debug(f"Error detaiils: {str(e)}")
         raise HTTPException(
             status_code=500,
-            detail="An unexpected error occurred while processing your resume." & str(e)
+            detail="An unexpected error occurred while processing your resume." + str(e)
         )
 @app.get("/test")
 async def test():
