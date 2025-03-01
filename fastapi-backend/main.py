@@ -33,6 +33,7 @@ app.add_middleware(
         "https://resume-rise.onrender.com",
         "https://resume-rise.app",
         "https://resume-compare-iwlg.onrender.com",
+        "https://resume-compare-iwlg.onrender.com/upload_resume"
         
     ],
     allow_credentials=True,
@@ -87,6 +88,7 @@ async def upload_resume(
     job_description: str = Form(None)
 ):
     try:
+        print("WE TRIED")
         # Extract text directly without the chunk reading
         resume_text = await extract_text_from_pdf(file)
         
@@ -311,7 +313,7 @@ Resume Text:
         print(f"Error details: {str(e)}")
         raise HTTPException(
             status_code=500,
-            detail="An unexpected error occurred while processing your resume."
+            detail="An unexpected error occurred while processing your resume." & str(e)
         )
 @app.get("/test")
 async def test():
